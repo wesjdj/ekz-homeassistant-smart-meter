@@ -21,6 +21,27 @@ def log_in(driver, url, username, password):
     login_button.click()
 
 def download_csv(driver, download_button_text, download_folder):
+
+    # Wait for the Tag button to be visible
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, f'//a[contains(text(), "Tag")]'))
+        )
+    except TimeoutError:
+        print("Timeout while waiting for the download button")
+        driver.quit()
+        return
+    
+    # Scroll the Tag button into view
+    tag_button = driver.find_element(By.XPATH, f'//a[contains(text(), "Tag")]')
+    driver.execute_script("arguments[0].scrollIntoView();", tag_button)
+
+    # Add a small delay before clicking
+    time.sleep(5)
+
+    # Click the tag button
+    driver.execute_script("arguments[0].click();", tag_button)
+
     # Wait for the download button to be visible
     try:
         WebDriverWait(driver, 10).until(
@@ -39,7 +60,6 @@ def download_csv(driver, download_button_text, download_folder):
     time.sleep(2)
 
     # Click the download button
-    # download_button.click()
     driver.execute_script("arguments[0].click();", download_button)
 
     # Wait for the download to complete
@@ -63,10 +83,9 @@ def format_data_for_home_assistant(data):
     formatted_data = []
     for row in data:
         entry = {
-            "date": row["Zeitraum"],
-            "ht_value": float(row["HT [kWh]"]),
-            "nt_value": float(row["NT [kWh]"]),
-            "total_value": float(row["Gesamt [kWh]"])
+            "time_range": row["Zeitraum"],
+            "ht_value": float(row["HT [kWh]"]) if row["HT [kWh]"] else 0,
+            "nt_value": float(row["NT [kWh]"]) if row["NT [kWh]"] else 0
         }
         formatted_data.append(entry)
     return formatted_data
@@ -89,7 +108,7 @@ if __name__ == "__main__":
     download_folder = os.path.abspath("downloads")  # Change the folder if necessary
 
     chrome_options = Options()
-    # Uncomment the next line to run Chrome in headless mode
+    # Comment the next line to run Chrome in non-headless mode
     chrome_options.add_argument("--headless")
 
     # Set up the download folder for Chrome
