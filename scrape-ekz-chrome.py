@@ -81,13 +81,17 @@ def csv_to_json(csv_file_path):
 
 def format_data_for_home_assistant(data):
     formatted_data = []
+    ht_value = 0
+    nt_value = 0
     for row in data:
-        entry = {
-            "time_range": row["Zeitraum"],
-            "ht_value": float(row["HT [kWh]"]) if row["HT [kWh]"] else 0,
-            "nt_value": float(row["NT [kWh]"]) if row["NT [kWh]"] else 0
-        }
-        formatted_data.append(entry)
+        nt_value = nt_value + (float(row["NT [kWh]"]) if row["NT [kWh]"] else 0)
+        ht_value = ht_value + (float(row["HT [kWh]"]) if row["HT [kWh]"] else 0)
+    entry = {
+        "total": ht_value + nt_value,
+        "peak": ht_value,
+        "offpeak": nt_value
+    }
+    formatted_data.append(entry)
     return formatted_data
 
 
@@ -101,25 +105,31 @@ def get_most_recent_csv(download_folder):
 
 if __name__ == "__main__":
     verbrauch_url = "https://my.ekz.ch/verbrauch/"
-    login_url = "https://my.ekz.ch/login/"  # Replace with the actual login URL
-    download_button_text = "Tabellendaten herunterladen"  # Update the button class if necessary
-    username = ""
-    password = ""
+    login_url = "https://my.ekz.ch/login/"
+    download_button_text = "Tabellendaten herunterladen"
+    username = "" # Enter username
+    password = "" # Enter password
     download_folder = os.path.abspath("downloads")  # Change the folder if necessary
 
     chrome_options = Options()
     # Comment the next line to run Chrome in non-headless mode
-    chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
 
     # Set up the download folder for Chrome
     prefs = {
         "download.default_directory": download_folder,
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
-        "plugins.always_open_pdf_externally": True,
     }
     chrome_options.add_experimental_option("prefs", prefs)
 
+    # If remote Selenium Chrome is used
+    # driver = webdriver.Remote(
+    #     command_executor='http://10.23.5.20:4444/wd/hub', # Enter IP address and port for remote Selenium Chrome instance, e.g. http://192.168.1.5:4444/wd/hub
+    #     options=chrome_options
+    # )
+
+    # If local Chrome is used
     driver = webdriver.Chrome(options=chrome_options)
 
     log_in(driver, login_url, username, password)
@@ -132,8 +142,6 @@ if __name__ == "__main__":
     # Close the browser
     driver.quit()
 
-    print(f"CSV file downloaded to {download_folder}")
-
     # Get the path of the most recently downloaded CSV file
     csv_file_path = get_most_recent_csv(download_folder)
 
@@ -144,8 +152,7 @@ if __name__ == "__main__":
         # Format the data for Home Assistant
         formatted_data = format_data_for_home_assistant(data)
 
-        # Print the formatted data
-        print("Formatted data for Home Assistant:")
+        # Print the formatted data for Home Assistant
         print(json.dumps(formatted_data, indent=2))
     else:
         print("No CSV file found")
