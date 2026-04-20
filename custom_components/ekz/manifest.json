@@ -1,0 +1,12 @@
+{
+  "domain": "ekz",
+  "name": "EKZ Smart Meter",
+  "version": "0.1.0",
+  "config_flow": true,
+  "iot_class": "cloud_polling",
+  "integration_type": "service",
+  "documentation": "https://github.com/wesjdj/ekz-homeassistant-smart-meter",
+  "issue_tracker": "https://github.com/wesjdj/ekz-homeassistant-smart-meter/issues",
+  "codeowners": ["@wesjdj"],
+  "requirements": ["ekzexport>=0.2", "requests>=2.28"]
+}

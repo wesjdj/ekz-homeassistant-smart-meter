@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "EKZ Smart Meter",
+        "description": "Enter your myEKZ credentials and installation ID. TOTP secret is only required if 2FA is enabled on your myEKZ account. Set up an authenticator app on myEKZ, click 'can't scan QR code' during setup, and paste the revealed base32 code here. Tariff names are optional, pick one or more from the dropdown to record a CHF cost statistic (works for any EKZ tariff, fixed or dynamic). The 'integrated_*' entries are one-pick bundles of electricity + grid + national fees; everything else lets you assemble components à la carte.",
+        "data": {
+          "username": "myEKZ username",
+          "password": "myEKZ password",
+          "totp_secret": "TOTP secret (optional, for 2FA)",
+          "installation_id": "Installation ID",
+          "tariff_names": "Tariffs (optional, for CHF cost statistic)",
+          "run_at_time": "Time of day to run import (HA local time)",
+          "jitter_minutes": "Random jitter window after that time (minutes)",
+          "max_backfill_days": "Max days to backfill on first run (0 = auto-detect earliest EKZ date)"
+        }
+      }
+    },
+    "error": {
+      "auth": "Could not log in to myEKZ with these credentials. Check username, password, TOTP secret, and installation ID.",
+      "invalid_totp": "TOTP secret isn't valid base32. It should only contain letters A-Z and digits 2-7 (spaces between groups are fine). During the myEKZ 2FA setup, click 'can't scan QR code' to reveal this base32 string."
+    },
+    "abort": {
+      "already_configured": "This installation ID is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "EKZ Smart Meter settings",
+        "description": "Tune the schedule, backfill, and tariff names without re-entering credentials.",
+        "data": {
+          "tariff_names": "Tariffs",
+          "run_at_time": "Time of day to run import (HA local time)",
+          "jitter_minutes": "Random jitter window after that time (minutes)",
+          "max_backfill_days": "Max days to backfill on first run (0 = auto-detect)"
+        }
+      }
+    }
+  },
+  "services": {
+    "import_now": {
+      "name": "Import now",
+      "description": "Run an EKZ → HA statistics import immediately (instead of waiting for the next scheduled tick)."
+    }
+  }
+}

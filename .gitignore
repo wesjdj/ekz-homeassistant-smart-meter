@@ -1,3 +1,8 @@
 .DS_STORE
+.env
 /downloads
 /selenium
+__pycache__/
+ekzexport.json
+logo/node_modules/
+logo/package-lock.json

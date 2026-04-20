@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "EKZ Smart Meter",
+        "description": "Geben Sie Ihre myEKZ-Anmeldedaten und die Installations-ID ein. Der TOTP-Schlüssel ist nur nötig, wenn in Ihrem myEKZ-Konto die 2-Faktor-Authentifizierung aktiviert ist. Richten Sie in Ihrem myEKZ-Konto eine Authenticator-App ein, klicken Sie während der Einrichtung auf «QR-Code kann nicht gescannt werden» und fügen Sie den angezeigten Base32-Code hier ein. Tarife sind optional. Wählen Sie einen oder mehrere aus der Dropdown-Liste, um eine CHF-Kostenstatistik zu erfassen (funktioniert für jeden EKZ-Tarif, feste wie dynamische). Die «integrated_*»-Einträge sind Komplettpakete aus Energie + Netz + Bundesabgaben; die übrigen Einträge ermöglichen die Zusammenstellung einzelner Komponenten.",
+        "data": {
+          "username": "myEKZ-Benutzername",
+          "password": "myEKZ-Passwort",
+          "totp_secret": "TOTP-Schlüssel (optional, für 2FA)",
+          "installation_id": "Installations-ID",
+          "tariff_names": "Tarife (optional, für CHF-Kostenstatistik)",
+          "run_at_time": "Uhrzeit des täglichen Imports (HA-Lokalzeit)",
+          "jitter_minutes": "Zufälliges Zeitfenster nach der Uhrzeit (Minuten)",
+          "max_backfill_days": "Maximale Tage für den erstmaligen Rückimport (0 = frühestes EKZ-Datum automatisch ermitteln)"
+        }
+      }
+    },
+    "error": {
+      "auth": "Anmeldung bei myEKZ mit diesen Daten fehlgeschlagen. Bitte Benutzername, Passwort, TOTP-Schlüssel und Installations-ID prüfen.",
+      "invalid_totp": "Der TOTP-Schlüssel ist kein gültiges Base32. Zulässig sind nur die Buchstaben A–Z und die Ziffern 2–7 (Leerzeichen zwischen Gruppen sind ok). Klicken Sie während der myEKZ-2FA-Einrichtung auf «QR-Code kann nicht gescannt werden», um diesen Base32-Code anzuzeigen."
+    },
+    "abort": {
+      "already_configured": "Diese Installations-ID ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "EKZ Smart Meter – Einstellungen",
+        "description": "Zeitplan, Rückimport und Tarife anpassen, ohne die Anmeldedaten erneut einzugeben.",
+        "data": {
+          "tariff_names": "Tarife",
+          "run_at_time": "Uhrzeit des täglichen Imports (HA-Lokalzeit)",
+          "jitter_minutes": "Zufälliges Zeitfenster nach der Uhrzeit (Minuten)",
+          "max_backfill_days": "Maximale Tage für den erstmaligen Rückimport (0 = automatisch ermitteln)"
+        }
+      }
+    }
+  },
+  "services": {
+    "import_now": {
+      "name": "Jetzt importieren",
+      "description": "Führt sofort einen EKZ → HA-Statistik-Import aus (anstatt auf den nächsten geplanten Lauf zu warten)."
+    }
+  }
+}
