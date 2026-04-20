@@ -10,7 +10,7 @@
 
 ## Why this exists
 
-Home Assistant regular sensors can only record "now" values; you can't backfill yesterday's reading by writing a state with a historical timestamp. But the Energy dashboard reads from **long-term statistics**, which the recorder lets you write to directly with any timestamp you want (that's how integrations like [Tauron AMIplus](https://github.com/prans2/ha-tauron-amiplus) handle the same problem, discussed on the [HA community forum][forum]).
+Home Assistant regular sensors can only record "now" values; you can't backfill yesterday's reading by writing a state with a historical timestamp. But the Energy dashboard reads from **long-term statistics**, which the recorder lets you write to directly with any timestamp you want (that's how integrations like [Tauron AMIplus](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Tauron-AMIplus) handle the same problem, discussed on the [HA community forum][forum]).
 
 This integration logs into myEKZ, fetches historical 15-minute consumption, optionally fetches matching 15-minute prices from EKZ's public tariffs API, aggregates everything to hourly buckets (kWh + CHF), and pushes them to HA's long-term statistics via `async_add_external_statistics`. The result: delayed EKZ data shows up on the Energy dashboard with the correct historical timestamps.
 
