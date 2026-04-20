@@ -1,0 +1,5 @@
+import_now:
+  name: Import now
+  description: >-
+    Run an EKZ → HA statistics import immediately (instead of waiting for the
+    next scheduled tick).

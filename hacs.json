@@ -1,0 +1,6 @@
+{
+  "name": "EKZ Smart Meter",
+  "render_readme": true,
+  "homeassistant": "2023.11.0",
+  "iot_class": "cloud_polling"
+}
