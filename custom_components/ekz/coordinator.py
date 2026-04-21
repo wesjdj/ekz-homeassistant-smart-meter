@@ -55,9 +55,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def _to_utc(naive: dt.datetime) -> dt.datetime:
-    """ekzexport's parse_api_timestamp returns a naive datetime whose clock mirrors
-    the Zurich-local time shown in the myEKZ UI; reinterpret and convert to UTC."""
-    return naive.replace(tzinfo=ZRH_TZ).astimezone(UTC_TZ)
+    """ekzexport's parse_api_timestamp parses the API's UTC timestamp into a naive
+    datetime; just tag it as UTC."""
+    return naive.replace(tzinfo=UTC_TZ)
 
 
 T = TypeVar("T")
